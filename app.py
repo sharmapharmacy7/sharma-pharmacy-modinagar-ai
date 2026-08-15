@@ -1,69 +1,60 @@
-from flask import Flask, send_file, jsonify, request
-from pathlib import Path
-import csv
-import re
+from flask import Flask, render_template, request, jsonify
+import csv, os
 
-BASE = Path(__file__).resolve().parent
 app = Flask(__name__)
-CSV = BASE / "stock.csv"
-HTML = BASE / "templates" / "index.html"
 
-def load():
-    with CSV.open(encoding="utf-8-sig", newline="") as f:
+CSV_FILE = "stock.csv"
+
+def load_stock():
+    if not os.path.exists(CSV_FILE):
+        return []
+    with open(CSV_FILE, newline="", encoding="utf-8-sig") as f:
         return list(csv.DictReader(f))
 
-STOCK = load()
-
-def norm(s):
-    return re.sub(r"[^a-zA-Z0-9\u0900-\u097F]+", " ", str(s or "").lower()).strip()
-
-def search(q, limit=30):
-    qn = norm(q)
-    if not qn:
-        return []
-    words = [w for w in qn.split() if len(w) > 1]
-    out = []
-    for r in STOCK:
-        hay = norm(" ".join([
-            r.get("Product", ""),
-            r.get("Form", ""),
-            r.get("Company", ""),
-            r.get("Barcode", "")
-        ]))
-        score = sum(w in hay for w in words)
-        if qn in hay:
-            score += 5
-        if score:
-            out.append((score, r))
-    out.sort(key=lambda x: x[0], reverse=True)
-    return [r for _, r in out[:limit]]
-
-@app.get("/")
+@app.route("/")
 def home():
-    # Directly serve the HTML file. This avoids Jinja template-loading errors.
-    return send_file(HTML)
+    return render_template("index.html")
 
-@app.get("/api/search")
-def api_search():
-    return jsonify(search(request.args.get("q", "")))
+@app.route("/api/search")
+def search():
+    q = request.args.get("q", "").strip().lower()
+    rows = load_stock()
+    if not q:
+        return jsonify(rows[:100])
+    out = []
+    for r in rows:
+        text = " ".join(str(v or "") for v in r.values()).lower()
+        if q in text:
+            out.append(r)
+    return jsonify(out[:100])
 
-@app.get("/api/stats")
+@app.route("/api/stats")
 def stats():
-    def n(c):
-        return sum(float(str(r.get(c, "")).replace(",", "") or 0) for r in STOCK)
-    products = len(set(r.get("Product", "") for r in STOCK if r.get("Product")))
+    rows = load_stock()
+    packs = 0
+    value = 0
+    for r in rows:
+        try: packs += float(r.get("No of Packs", 0) or 0)
+        except: pass
+        try:
+            value += float(r.get("MRP (Rs)", 0) or 0) * float(r.get("No of Packs", 0) or 0)
+        except: pass
     return jsonify({
-        "records": len(STOCK),
-        "products": products,
-        "packs": n("No of Packs"),
-        "value": n("Stock Value (Rs)")
+        "records": len(rows),
+        "products": len(set((r.get("Product") or "").strip().lower() for r in rows if r.get("Product"))),
+        "packs": int(packs),
+        "value": value
     })
 
-@app.post("/api/reload")
-def reload_data():
-    global STOCK
-    STOCK = load()
-    return jsonify({"ok": True, "records": len(STOCK)})
+@app.route("/api/order", methods=["POST"])
+def order():
+    data = request.get_json(silent=True) or {}
+    if not data.get("items"):
+        return jsonify({"ok": False, "message": "Order is empty"}), 400
+    # Order is intentionally not written to stock.csv.
+    # WhatsApp remains the customer-facing order channel.
+    return jsonify({"ok": True, "message": "Order received", "order": data})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
