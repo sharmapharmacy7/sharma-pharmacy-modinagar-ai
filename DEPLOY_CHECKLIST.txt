@@ -1,0 +1,11 @@
+ONLINE DEPLOY CHECKLIST
+[ ] GitHub repository बनाएं
+[ ] सभी project files upload करें
+[ ] Render Web Service connect करें
+[ ] Build: pip install -r requirements.txt
+[ ] Start: gunicorn app:app
+[ ] Deploy
+[ ] HTTPS URL test करें
+[ ] Medicine search test करें
+[ ] Order cart test करें
+[ ] WhatsApp order test करें
