@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sharma Pharmacy Modinagar</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,sans-serif;background:#f4f7f9;color:#17212b}
+    header{background:#087f5b;color:white;padding:22px}
+    header h1{margin:0 0 6px;font-size:28px}
+    header p{margin:0;opacity:.9}
+    .wrap{max-width:1100px;margin:auto;padding:20px}
+    .search{display:flex;gap:10px;margin-bottom:20px}
+    input{flex:1;padding:14px;border:1px solid #ccd5db;border-radius:8px;font-size:16px}
+    button{padding:14px 20px;border:0;border-radius:8px;background:#087f5b;color:white;font-weight:bold;cursor:pointer}
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+    .card{background:white;padding:18px;border-radius:10px;box-shadow:0 2px 8px #0001}
+    .card b{font-size:24px;display:block;margin-top:6px}
+    .tablebox{background:white;border-radius:10px;overflow:auto;box-shadow:0 2px 8px #0001}
+    table{width:100%;border-collapse:collapse;min-width:800px}
+    th,td{padding:12px;border-bottom:1px solid #e8ecef;text-align:left}
+    th{background:#eef7f3}
+    .msg{padding:25px;text-align:center;color:#667}
+    @media(max-width:700px){.cards{grid-template-columns:repeat(2,1fr)}.search{flex-direction:column}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>💊 Sharma Pharmacy Modinagar</h1>
+    <p>Medicine Stock & Order Assistant</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="search">
+    <input id="q" placeholder="Medicine name / company / barcode search..." autocomplete="off">
+    <button onclick="searchStock()">Search</button>
+  </div>
+
+  <section class="cards">
+    <div class="card">Total Records<b id="records">—</b></div>
+    <div class="card">Products<b id="products">—</b></div>
+    <div class="card">Total Packs<b id="packs">—</b></div>
+    <div class="card">Stock Value<b id="value">—</b></div>
+  </section>
+
+  <div class="tablebox">
+    <div id="message" class="msg">Medicine search करने के लिए ऊपर नाम लिखें।</div>
+    <table id="tbl" style="display:none">
+      <thead><tr>
+        <th>Product</th><th>Form</th><th>Company</th><th>Barcode</th>
+        <th>Expiry</th><th>MRP</th><th>Packs</th><th>Loose</th>
+      </tr></thead>
+      <tbody id="body"></tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+async function stats(){
+  try{
+    const r=await fetch('/api/stats');
+    const d=await r.json();
+    records.textContent=d.records ?? 0;
+    products.textContent=d.products ?? 0;
+    packs.textContent=d.packs ?? 0;
+    value.textContent='₹ '+Number(d.value||0).toFixed(2);
+  }catch(e){console.error(e)}
+}
+
+async function searchStock(){
+  const q=document.getElementById('q').value.trim();
+  const msg=document.getElementById('message');
+  const tbl=document.getElementById('tbl');
+  const body=document.getElementById('body');
+  if(!q){
+    tbl.style.display='none';
+    msg.style.display='block';
+    msg.textContent='Medicine search करने के लिए ऊपर नाम लिखें।';
+    return;
+  }
+  msg.style.display='block';
+  msg.textContent='Searching...';
+  try{
+    const r=await fetch('/api/search?q='+encodeURIComponent(q));
+    const data=await r.json();
+    body.innerHTML='';
+    if(!data.length){
+      tbl.style.display='none';
+      msg.textContent='Medicine नहीं मिली।';
+      return;
+    }
+    data.forEach(x=>{
+      const tr=document.createElement('tr');
+      ['Product','Form','Company','Barcode','Expiry (MM/YY)','MRP (Rs)','No of Packs','Loose Units']
+      .forEach(k=>{
+        const td=document.createElement('td');
+        td.textContent=x[k] ?? '';
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+    msg.style.display='none';
+    tbl.style.display='table';
+  }catch(e){
+    tbl.style.display='none';
+    msg.textContent='Server/API error. Render Logs check करें।';
+  }
+}
+
+document.getElementById('q').addEventListener('keydown',e=>{
+  if(e.key==='Enter') searchStock();
+});
+stats();
+</script>
+</body>
+</html>
