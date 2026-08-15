@@ -1,119 +1,115 @@
 <!doctype html>
 <html lang="hi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Sharma Pharmacy Modinagar</title>
-  <style>
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,sans-serif;background:#f4f7f9;color:#17212b}
-    header{background:#087f5b;color:white;padding:22px}
-    header h1{margin:0 0 6px;font-size:28px}
-    header p{margin:0;opacity:.9}
-    .wrap{max-width:1100px;margin:auto;padding:20px}
-    .search{display:flex;gap:10px;margin-bottom:20px}
-    input{flex:1;padding:14px;border:1px solid #ccd5db;border-radius:8px;font-size:16px}
-    button{padding:14px 20px;border:0;border-radius:8px;background:#087f5b;color:white;font-weight:bold;cursor:pointer}
-    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-    .card{background:white;padding:18px;border-radius:10px;box-shadow:0 2px 8px #0001}
-    .card b{font-size:24px;display:block;margin-top:6px}
-    .tablebox{background:white;border-radius:10px;overflow:auto;box-shadow:0 2px 8px #0001}
-    table{width:100%;border-collapse:collapse;min-width:800px}
-    th,td{padding:12px;border-bottom:1px solid #e8ecef;text-align:left}
-    th{background:#eef7f3}
-    .msg{padding:25px;text-align:center;color:#667}
-    @media(max-width:700px){.cards{grid-template-columns:repeat(2,1fr)}.search{flex-direction:column}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sharma Pharmacy Modinagar | Online Medicine Order</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f8f6;color:#17212b}
+header{background:linear-gradient(135deg,#064f3d,#0a9871);color:#fff;position:sticky;top:0;z-index:20}
+.wrap{max-width:1250px;margin:auto;padding:16px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px}
+.brand h1{margin:0;font-size:27px}.brand p{margin:5px 0 0;opacity:.9}.topBtns{display:flex;gap:8px}
+button{border:0;border-radius:9px;padding:11px 15px;font-weight:700;cursor:pointer;background:#087f5b;color:#fff}
+.white{background:#fff;color:#087f5b}.danger{background:#d64545}.wa{background:#16a05d;width:100%;font-size:16px}
+nav{background:#fff;box-shadow:0 2px 8px #0001;position:sticky;top:78px;z-index:15}.navin{display:flex;gap:8px;overflow:auto}.navin button{background:transparent;color:#24594c;white-space:nowrap}
+.hero{background:#e8f7f1;padding:18px;border-radius:14px;margin:18px 0}.hero h2{margin:0 0 6px}.search{display:flex;gap:10px;margin-top:14px}
+input,textarea,select{width:100%;padding:12px;border:1px solid #ccd5db;border-radius:9px;font-size:15px;background:#fff}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:15px 0}.card,.panel{background:#fff;padding:17px;border-radius:13px;box-shadow:0 2px 10px #0001}.card b{display:block;font-size:23px;margin-top:5px}
+.layout{display:grid;grid-template-columns:1.7fr 1fr;gap:16px}.tablebox{overflow:auto}table{width:100%;border-collapse:collapse;min-width:800px}th,td{padding:10px;border-bottom:1px solid #e6ece9;text-align:left}th{background:#eef7f3}.qty{width:65px}
+.category{display:flex;gap:8px;overflow:auto;margin-bottom:15px}.category button{background:#fff;color:#075c45;border:1px solid #b9d8cc;white-space:nowrap}.category button.active{background:#087f5b;color:#fff}
+.cartitem{padding:10px 0;border-bottom:1px solid #eee}.remove{float:right;padding:6px 9px;background:#d64545}.muted{font-size:12px;color:#667}.msg{text-align:center;padding:22px;color:#667}
+#presPreview{max-width:100%;max-height:180px;border-radius:8px;margin-top:8px;display:none}.section{margin-top:22px}.hidden{display:none}
+.historyItem{border:1px solid #e3ebe7;padding:12px;border-radius:9px;margin:8px 0}.badge{display:inline-block;padding:4px 8px;border-radius:20px;background:#e8f7f1;color:#087f5b;font-size:12px}
+footer{margin-top:25px;background:#073f32;color:#fff;padding:25px}.footergrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:20px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.brand h1{font-size:21px}.topBtns .white{display:none}.search{flex-direction:column}.cards{grid-template-columns:repeat(2,1fr)}.footergrid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <h1>💊 Sharma Pharmacy Modinagar</h1>
-    <p>Medicine Stock & Order Assistant</p>
-  </div>
-</header>
 
-<main class="wrap">
-  <div class="search">
-    <input id="q" placeholder="Medicine name / company / barcode search..." autocomplete="off">
-    <button onclick="searchStock()">Search</button>
-  </div>
+<header><div class="wrap top">
+<div class="brand"><h1>💊 Sharma Pharmacy Modinagar</h1><p>Trusted Medicine • Stock • Home Delivery</p></div>
+<div class="topBtns"><button class="white" onclick="scrollToId('history')">📋 Orders</button><button onclick="scrollToId('cart')">🛒 Cart (<span id="count">0</span>)</button></div>
+</div></header>
 
-  <section class="cards">
-    <div class="card">Total Records<b id="records">—</b></div>
-    <div class="card">Products<b id="products">—</b></div>
-    <div class="card">Total Packs<b id="packs">—</b></div>
-    <div class="card">Stock Value<b id="value">—</b></div>
-  </section>
+<nav><div class="wrap navin">
+<button onclick="scrollToId('shop')">🏠 Shop</button><button onclick="setCat('All')">All Medicines</button><button onclick="setCat('Tablet')">Tablets</button><button onclick="setCat('Syrup')">Syrups</button><button onclick="setCat('Capsule')">Capsules</button><button onclick="setCat('Injection')">Injections</button><button onclick="setCat('Baby Care')">Baby Care</button><button onclick="scrollToId('prescription')">📷 Prescription</button>
+</div></nav>
 
-  <div class="tablebox">
-    <div id="message" class="msg">Medicine search करने के लिए ऊपर नाम लिखें।</div>
-    <table id="tbl" style="display:none">
-      <thead><tr>
-        <th>Product</th><th>Form</th><th>Company</th><th>Barcode</th>
-        <th>Expiry</th><th>MRP</th><th>Packs</th><th>Loose</th>
-      </tr></thead>
-      <tbody id="body"></tbody>
-    </table>
-  </div>
+<main class="wrap" id="shop">
+<section class="hero">
+<h2>Online Medicine Order</h2>
+<div>Medicine search करें, quantity चुनें और घर बैठे WhatsApp पर order भेजें।</div>
+<div class="search"><input id="q" placeholder="Medicine name / company / barcode search..."><button onclick="searchStock()">🔎 Search</button></div>
+</section>
+
+<div class="category" id="cats"></div>
+<section class="cards">
+<div class="card">Total Records<b id="records">—</b></div><div class="card">Products<b id="products">—</b></div>
+<div class="card">Total Packs<b id="packs">—</b></div><div class="card">Stock Value<b id="value">—</b></div>
+</section>
+
+<div class="layout">
+<section class="panel">
+<h2>📦 Medicines</h2>
+<div class="tablebox"><div id="message" class="msg">ऊपर medicine का नाम लिखकर Search करें।</div>
+<table id="tbl" class="hidden"><thead><tr><th>Medicine</th><th>Company</th><th>Expiry</th><th>MRP</th><th>Stock</th><th>Qty</th><th>Add</th></tr></thead><tbody id="body"></tbody></table></div>
+</section>
+
+<aside class="panel" id="cart">
+<h2>🛒 Your Cart</h2><div id="cartBody"><div class="msg">Cart खाली है।</div></div>
+<hr><h3>Customer Details</h3>
+<input id="name" placeholder="Customer Name *"><br><br>
+<input id="mobile" placeholder="Mobile Number *"><br><br>
+<textarea id="address" rows="3" placeholder="Delivery Address *"></textarea>
+<p class="muted">Order WhatsApp: <b>8279846477</b></p>
+<button class="wa" onclick="sendOrder()">📲 WhatsApp पर Order भेजें</button>
+</aside>
+</div>
+
+<section class="panel section" id="prescription">
+<h2>📷 Prescription Upload</h2>
+<p>Doctor की prescription की photo चुनें। यह order के साथ आपके WhatsApp में attach करने के लिए तैयार होगी।</p>
+<input id="presFile" type="file" accept="image/*,.pdf" onchange="previewPrescription()">
+<img id="presPreview">
+<p id="presName" class="muted"></p>
+</section>
+
+<section class="panel section" id="history">
+<h2>📋 Recent Orders</h2><div id="historyBody"><div class="msg">अभी कोई local order history नहीं है।</div></div>
+</section>
+
+<section class="panel section" id="admin">
+<h2>⚙️ Admin / Stock Panel</h2>
+<p class="muted">यह demo panel browser में local data दिखाता है। असली stock update के लिए backend/API से connect करना होगा।</p>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+<input id="adminSearch" placeholder="Medicine name"><input id="adminQty" type="number" placeholder="New stock"><button onclick="saveLocalStock()">💾 Save Local Stock</button>
+</div>
+<div id="adminMsg" class="muted" style="margin-top:10px"></div>
+</section>
 </main>
 
+<footer><div class="wrap footergrid"><div><h2>Sharma Pharmacy Modinagar</h2><p>Medicine Stock & Online Order Assistant</p></div><div><b>📞 WhatsApp</b><p>8279846477</p></div><div><b>🚚 Home Delivery</b><p>Order confirmation के बाद delivery details share की जाएंगी।</p></div></div></footer>
+
 <script>
-async function stats(){
-  try{
-    const r=await fetch('/api/stats');
-    const d=await r.json();
-    records.textContent=d.records ?? 0;
-    products.textContent=d.products ?? 0;
-    packs.textContent=d.packs ?? 0;
-    value.textContent='₹ '+Number(d.value||0).toFixed(2);
-  }catch(e){console.error(e)}
-}
-
-async function searchStock(){
-  const q=document.getElementById('q').value.trim();
-  const msg=document.getElementById('message');
-  const tbl=document.getElementById('tbl');
-  const body=document.getElementById('body');
-  if(!q){
-    tbl.style.display='none';
-    msg.style.display='block';
-    msg.textContent='Medicine search करने के लिए ऊपर नाम लिखें।';
-    return;
-  }
-  msg.style.display='block';
-  msg.textContent='Searching...';
-  try{
-    const r=await fetch('/api/search?q='+encodeURIComponent(q));
-    const data=await r.json();
-    body.innerHTML='';
-    if(!data.length){
-      tbl.style.display='none';
-      msg.textContent='Medicine नहीं मिली।';
-      return;
-    }
-    data.forEach(x=>{
-      const tr=document.createElement('tr');
-      ['Product','Form','Company','Barcode','Expiry (MM/YY)','MRP (Rs)','No of Packs','Loose Units']
-      .forEach(k=>{
-        const td=document.createElement('td');
-        td.textContent=x[k] ?? '';
-        tr.appendChild(td);
-      });
-      body.appendChild(tr);
-    });
-    msg.style.display='none';
-    tbl.style.display='table';
-  }catch(e){
-    tbl.style.display='none';
-    msg.textContent='Server/API error. Render Logs check करें।';
-  }
-}
-
-document.getElementById('q').addEventListener('keydown',e=>{
-  if(e.key==='Enter') searchStock();
-});
-stats();
+let results=[],cart=[],category='All',prescriptionName='';
+const $=id=>document.getElementById(id);
+function scrollToId(id){$(id).scrollIntoView({behavior:'smooth'})}
+async function stats(){try{let d=await(await fetch('/api/stats')).json();$('records').textContent=d.records??0;$('products').textContent=d.products??0;$('packs').textContent=d.packs??0;$('value').textContent='₹ '+Number(d.value||0).toFixed(2)}catch(e){}}
+function setCat(c){category=c;document.querySelectorAll('.category button').forEach(b=>b.classList.toggle('active',b.textContent===c));if(c==='All'){$('q').value='';$('message').textContent='ऊपर medicine का नाम लिखकर Search करें।';$('tbl').classList.add('hidden');return} $('q').value=c;searchStock()}
+function add(i){let x=results[i],q=Math.max(1,parseInt($('qty'+i).value)||1),key=(x.Product||'')+'|'+(x['Expiry (MM/YY)']||'');let a=cart.find(z=>z.key===key);if(a)a.qty+=q;else cart.push({x,qty:q,key});drawCart()}
+function remove(i){cart.splice(i,1);drawCart()}
+function drawCart(){$('count').textContent=cart.reduce((s,a)=>s+a.qty,0);$('cartBody').innerHTML=cart.length?cart.map((a,i)=>`<div class="cartitem"><b>${a.x.Product||''}</b><br><span class="muted">${a.x.Company||''} | Exp: ${a.x['Expiry (MM/YY)']||''} | MRP ₹${a.x['MRP (Rs)']||''} | Qty: ${a.qty}</span><button class="remove" onclick="remove(${i})">×</button><div style="clear:both"></div></div>`).join(''):'<div class="msg">Cart खाली है।</div>'}
+async function searchStock(){let q=$('q').value.trim(),m=$('message'),t=$('tbl');if(!q){t.classList.add('hidden');m.classList.remove('hidden');m.textContent='ऊपर medicine का नाम लिखकर Search करें।';return}m.classList.remove('hidden');m.textContent='Searching...';try{results=await(await fetch('/api/search?q='+encodeURIComponent(q))).json();$('body').innerHTML='';if(!results.length){t.classList.add('hidden');m.textContent='Medicine नहीं मिली।';return}results.forEach((x,i)=>{$('body').insertAdjacentHTML('beforeend',`<tr><td><b>${x.Product||''}</b><br><span class="muted">${x.Form||''}</span></td><td>${x.Company||''}</td><td>${x['Expiry (MM/YY)']||''}</td><td>₹${x['MRP (Rs)']||''}</td><td>${x['No of Packs']||0}</td><td><input class="qty" id="qty${i}" type="number" min="1" value="1"></td><td><button onclick="add(${i})">ADD</button></td></tr>`)});m.classList.add('hidden');t.classList.remove('hidden')}catch(e){t.classList.add('hidden');m.textContent='Server/API error. Render Logs check करें.'}}
+function previewPrescription(){let f=$('presFile').files[0];if(!f)return;prescriptionName=f.name;$('presName').textContent='Selected: '+f.name;if(f.type.startsWith('image/')){$('presPreview').src=URL.createObjectURL(f);$('presPreview').style.display='block'}else $('presPreview').style.display='none'}
+async function sendOrder(){if(!cart.length)return alert('पहले medicine को ADD करें।');let n=$('name').value.trim(),m=$('mobile').value.trim(),a=$('address').value.trim();if(!n||!m||!a)return alert('Customer Name, Mobile और Address भरें।');
+let order={id:'SP'+Date.now(),date:new Date().toLocaleString('en-IN'),name:n,mobile:m,address:a,items:cart.map(x=>({product:x.x.Product||'',company:x.x.Company||'',expiry:x.x['Expiry (MM/YY)']||'',qty:x.qty})),prescription:prescriptionName,status:'WhatsApp Pending'};let h=JSON.parse(localStorage.getItem('sp_orders')||'[]');h.unshift(order);localStorage.setItem('sp_orders',JSON.stringify(h.slice(0,20)));renderHistory();
+let text=`*SHARMA PHARMACY MODINAGAR - NEW ORDER*%0A%0AOrder ID: ${order.id}%0ACustomer: ${n}%0AMobile: ${m}%0AAddress: ${a}%0A%0A*MEDICINES:*%0A`;order.items.forEach((x,i)=>text+=`${i+1}. ${x.product} | ${x.company} | Exp ${x.expiry} | Qty ${x.qty}%0A`);if(prescriptionName)text+=`%0A📷 Prescription selected: ${prescriptionName}%0A`;text+=`%0APlease confirm availability, final price and delivery.`;window.open('https://wa.me/918279846477?text='+text,'_blank')}
+function renderHistory(){let h=JSON.parse(localStorage.getItem('sp_orders')||'[]');$('historyBody').innerHTML=h.length?h.map(o=>`<div class="historyItem"><span class="badge">${o.status}</span> <b>${o.id}</b><br><span class="muted">${o.date}</span><br>${o.items.map(x=>`${x.product} × ${x.qty}`).join(', ')}</div>`).join(''):'<div class="msg">अभी कोई local order history नहीं है।</div>'}
+function saveLocalStock(){let n=$('adminSearch').value.trim(),q=$('adminQty').value;if(!n||q==='')return $('adminMsg').textContent='Medicine name और stock भरें।';localStorage.setItem('stock_'+n,q);$('adminMsg').textContent='Local stock saved: '+n+' = '+q}
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter')searchStock()});
+$('cats').innerHTML=['All','Tablet','Syrup','Capsule','Injection','Baby Care'].map(x=>`<button onclick="setCat('${x}')">${x}</button>`).join('');
+stats();renderHistory();
 </script>
 </body>
 </html>
