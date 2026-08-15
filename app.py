@@ -1,13 +1,17 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, send_file, jsonify, request
 from pathlib import Path
-import csv, re
+import csv
+import re
 
+BASE = Path(__file__).resolve().parent
 app = Flask(__name__)
-CSV = Path(__file__).with_name("stock.csv")
+CSV = BASE / "stock.csv"
+HTML = BASE / "templates" / "index.html"
 
 def load():
     with CSV.open(encoding="utf-8-sig", newline="") as f:
         return list(csv.DictReader(f))
+
 STOCK = load()
 
 def norm(s):
@@ -20,7 +24,12 @@ def search(q, limit=30):
     words = [w for w in qn.split() if len(w) > 1]
     out = []
     for r in STOCK:
-        hay = norm(" ".join([r.get("Product",""), r.get("Form",""), r.get("Company",""), r.get("Barcode","")]))
+        hay = norm(" ".join([
+            r.get("Product", ""),
+            r.get("Form", ""),
+            r.get("Company", ""),
+            r.get("Barcode", "")
+        ]))
         score = sum(w in hay for w in words)
         if qn in hay:
             score += 5
@@ -31,7 +40,8 @@ def search(q, limit=30):
 
 @app.get("/")
 def home():
-    return render_template("index.html")
+    # Directly serve the HTML file. This avoids Jinja template-loading errors.
+    return send_file(HTML)
 
 @app.get("/api/search")
 def api_search():
@@ -41,9 +51,13 @@ def api_search():
 def stats():
     def n(c):
         return sum(float(str(r.get(c, "")).replace(",", "") or 0) for r in STOCK)
-    products = len(set(r.get("Product","") for r in STOCK if r.get("Product")))
-    return jsonify({"records": len(STOCK), "products": products,
-                    "packs": n("No of Packs"), "value": n("Stock Value (Rs)")})
+    products = len(set(r.get("Product", "") for r in STOCK if r.get("Product")))
+    return jsonify({
+        "records": len(STOCK),
+        "products": products,
+        "packs": n("No of Packs"),
+        "value": n("Stock Value (Rs)")
+    })
 
 @app.post("/api/reload")
 def reload_data():
