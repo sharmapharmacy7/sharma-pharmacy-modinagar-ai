@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sharma Pharmacy Modinagar | Online Order</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f1f8f4;
+    color:#222;
+}
+
+.header{
+    background:linear-gradient(135deg,#087f3f,#12a85a);
+    color:white;
+    text-align:center;
+    padding:22px 15px;
+}
+
+.logo{
+    width:80px;
+    height:80px;
+    margin:auto;
+    border-radius:50%;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#087f3f;
+    font-size:35px;
+    font-weight:bold;
+    border:4px solid #fff;
+}
+
+.header h1{
+    margin:10px 0 5px;
+    font-size:28px;
+}
+
+.header p{
+    margin:5px 0;
+}
+
+.container{
+    max-width:650px;
+    margin:20px auto;
+    padding:15px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 4px 15px rgba(0,0,0,.12);
+    margin-bottom:18px;
+}
+
+h2{
+    color:#087f3f;
+    margin-top:0;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin-top:14px;
+}
+
+input,textarea{
+    width:100%;
+    padding:13px;
+    margin-top:6px;
+    border:1px solid #ccc;
+    border-radius:9px;
+    font-size:16px;
+}
+
+textarea{
+    min-height:110px;
+    resize:vertical;
+}
+
+button,.btn{
+    display:block;
+    width:100%;
+    border:0;
+    border-radius:10px;
+    padding:14px;
+    margin-top:15px;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+    text-align:center;
+    text-decoration:none;
+}
+
+.order-btn{
+    background:#087f3f;
+    color:white;
+}
+
+.whatsapp{
+    background:#25D366;
+    color:white;
+}
+
+.map{
+    background:#1976d2;
+    color:white;
+}
+
+.success{
+    display:none;
+    background:#e7f8ed;
+    border:2px solid #12a85a;
+    color:#087f3f;
+    padding:18px;
+    border-radius:12px;
+    text-align:center;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+.footer{
+    text-align:center;
+    padding:20px;
+    color:#555;
+    font-size:14px;
+}
+
+.small{
+    color:#666;
+    font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+    <div class="logo">SP</div>
+
+    <h1>Sharma Pharmacy</h1>
+
+    <p><b>Modinagar</b></p>
+
+    <p>Medicine • Healthcare • Home Delivery</p>
+
+</div>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>🛒 Online Medicine Order</h2>
+
+        <p class="small">
+            Prescription medicine ke liye valid prescription upload/submit karna zaroori ho sakta hai.
+        </p>
+
+        <label>Customer Name</label>
+        <input id="name" type="text" placeholder="Apna naam likhein">
+
+        <label>Mobile Number</label>
+        <input id="mobile" type="tel" placeholder="10 digit mobile number">
+
+        <label>Medicine / Order Details</label>
+        <textarea id="medicine"
+        placeholder="Medicine ka naam, quantity aur strength likhein"></textarea>
+
+        <label>Delivery Address</label>
+        <textarea id="address"
+        placeholder="Pura delivery address likhein"></textarea>
+
+        <button class="order-btn" onclick="placeOrder()">
+            ✅ ORDER RECEIVE KAREIN
+        </button>
+
+        <div id="success" class="success">
+            ✅ ORDER RECEIVED<br><br>
+            Aapka order request receive ho gaya hai.<br>
+            Pharmacy team aapse confirmation ke liye contact karegi.
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2>📱 WhatsApp Order</h2>
+
+        <p>
+            Direct WhatsApp par order bhejne ke liye button dabayein.
+        </p>
+
+        <a id="whatsappBtn"
+           class="btn whatsapp"
+           href="#"
+           target="_blank">
+           💬 WhatsApp Order
+        </a>
+
+    </div>
+
+    <div class="card">
+
+        <h2>📍 Sharma Pharmacy Modinagar</h2>
+
+        <p>
+            G.T. Road, Modinagar
+        </p>
+
+        <a class="btn map"
+           href="https://www.google.com/maps/search/?api=1&query=Sharma+Pharmacy+Modinagar+G.T.+Road"
+           target="_blank">
+           📍 Google Maps पर Location देखें
+        </a>
+
+    </div>
+
+</div>
+
+<div class="footer">
+    © 2026 Sharma Pharmacy Modinagar<br>
+    Online Medicine Order
+</div>
+
+<script>
+
+function getOrderText(){
+
+    const name =
+        document.getElementById("name").value.trim();
+
+    const mobile =
+        document.getElementById("mobile").value.trim();
+
+    const medicine =
+        document.getElementById("medicine").value.trim();
+
+    const address =
+        document.getElementById("address").value.trim();
+
+    return {
+        name:name,
+        mobile:mobile,
+        medicine:medicine,
+        address:address
+    };
+}
+
+
+function placeOrder(){
+
+    const order = getOrderText();
+
+    if(!order.name ||
+       !order.mobile ||
+       !order.medicine ||
+       !order.address){
+
+        alert("Please Name, Mobile, Medicine aur Address fill karein.");
+        return;
+    }
+
+    if(!/^[0-9]{10}$/.test(order.mobile)){
+
+        alert("Please 10 digit mobile number enter karein.");
+        return;
+    }
+
+    const message =
+`SHARMA PHARMACY ONLINE ORDER
+
+Customer Name: ${order.name}
+
+Mobile: ${order.mobile}
+
+Medicine:
+${order.medicine}
+
+Delivery Address:
+${order.address}`;
+
+    /*
+      WhatsApp number:
+      Sharma Pharmacy
+    */
+    const whatsappNumber = "918279846477";
+
+    const whatsappURL =
+        "https://wa.me/" +
+        whatsappNumber +
+        "?text=" +
+        encodeURIComponent(message);
+
+    document.getElementById("whatsappBtn").href = whatsappURL;
+
+    document.getElementById("success").style.display = "block";
+
+    window.open(whatsappURL, "_blank");
+
+    window.scrollTo({
+        top:document.body.scrollHeight,
+        behavior:"smooth"
+    });
+}
+
+</script>
+
+</body>
+</html>
